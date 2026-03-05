@@ -7,6 +7,28 @@
   </head>
   <body>
     <div id="root"></div>
+    <script type="module">
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-app.js";
+      import { getAnalytics, isSupported } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-analytics.js";
+
+      const firebaseConfig = {
+        apiKey: "AIzaSyANTKVx6hC6eYgcG1ZpVeu4xe2g_H35bFU",
+        authDomain: "chitra-kala.firebaseapp.com",
+        projectId: "chitra-kala",
+        storageBucket: "chitra-kala.firebasestorage.app",
+        messagingSenderId: "220877138592",
+        appId: "1:220877138592:web:b349cd7958b9c323a2b7c5",
+        measurementId: "G-GF59QNK6JZ",
+      };
+
+      const app = initializeApp(firebaseConfig);
+      // Only start analytics when supported (e.g., in browser environment)
+      if (typeof window !== "undefined") {
+        isSupported()
+          .then((ok) => ok && getAnalytics(app))
+          .catch(() => {});
+      }
+    </script>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>
