@@ -22,6 +22,14 @@ export function Navbar() {
   const [searchOpen, setSearchOpen] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
+  const [notificationsOpen, setNotificationsOpen] = useState(false);
+  const [profileOpen, setProfileOpen] = useState(false);
+
+  const notifications = [
+    { id: 1, text: "Marcus liked your drawing", time: "2m ago" },
+    { id: 2, text: "New challenge: Ocean Dreamscape", time: "1h ago" },
+    { id: 3, text: "Sakura followed you", time: "3h ago" },
+  ];
 
   const navItems = [
     { path: "/", label: "Home", icon: Home },
@@ -103,12 +111,40 @@ export function Navbar() {
             </div>
 
             {/* Notifications */}
-            <button className="relative w-9 h-9 rounded-xl bg-white/5 hover:bg-white/10 flex items-center justify-center transition-colors">
-              <Bell className="w-4 h-4 text-gray-400" />
-              <span className="absolute -top-0.5 -right-0.5 w-4 h-4 bg-violet-500 rounded-full text-[10px] text-white flex items-center justify-center">
-                3
-              </span>
-            </button>
+            <div className="relative">
+              <button
+                onClick={() => {
+                  setNotificationsOpen(!notificationsOpen);
+                  setProfileOpen(false);
+                }}
+                className="relative w-9 h-9 rounded-xl bg-white/5 hover:bg-white/10 flex items-center justify-center transition-colors"
+              >
+                <Bell className="w-4 h-4 text-gray-400" />
+                <span className="absolute -top-0.5 -right-0.5 w-4 h-4 bg-violet-500 rounded-full text-[10px] text-white flex items-center justify-center">
+                  3
+                </span>
+              </button>
+              {notificationsOpen && (
+                <div className="absolute right-0 mt-2 w-64 rounded-2xl border border-white/10 bg-[#0d0d14] shadow-lg shadow-black/40 p-3 space-y-2">
+                  <div className="text-xs text-gray-500 px-1">Notifications</div>
+                  {notifications.map((n) => (
+                    <div
+                      key={n.id}
+                      className="rounded-xl px-3 py-2 bg-white/5 text-sm text-gray-200 border border-white/5"
+                    >
+                      <div className="text-white/90">{n.text}</div>
+                      <div className="text-[11px] text-gray-500">{n.time}</div>
+                    </div>
+                  ))}
+                  <button
+                    onClick={() => setNotificationsOpen(false)}
+                    className="w-full text-center text-xs text-violet-300 hover:text-white transition-colors"
+                  >
+                    Mark as read
+                  </button>
+                </div>
+              )}
+            </div>
 
             {/* Upload */}
             <button
@@ -120,13 +156,53 @@ export function Navbar() {
             </button>
 
             {/* Avatar */}
-            <button className="w-9 h-9 rounded-full overflow-hidden border-2 border-violet-500/40 hover:border-violet-400 transition-colors">
-              <img
-                src="https://images.unsplash.com/photo-1624091844772-554661d10173?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&w=200"
-                alt="Profile"
-                className="w-full h-full object-cover"
-              />
-            </button>
+            <div className="relative">
+              <button
+                onClick={() => {
+                  setProfileOpen(!profileOpen);
+                  setNotificationsOpen(false);
+                }}
+                className="w-9 h-9 rounded-full overflow-hidden border-2 border-violet-500/40 hover:border-violet-400 transition-colors"
+              >
+                <img
+                  src="https://images.unsplash.com/photo-1624091844772-554661d10173?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&w=200"
+                  alt="Profile"
+                  className="w-full h-full object-cover"
+                />
+              </button>
+              {profileOpen && (
+                <div className="absolute right-0 mt-2 w-48 rounded-2xl border border-white/10 bg-[#0d0d14] shadow-lg shadow-black/40 py-2">
+                  <button
+                    onClick={() => {
+                      setProfileOpen(false);
+                      navigate("/profile/a1");
+                    }}
+                    className="w-full text-left px-4 py-2 text-sm text-gray-200 hover:bg-white/5"
+                  >
+                    View Profile
+                  </button>
+                  <button
+                    onClick={() => {
+                      setProfileOpen(false);
+                      navigate("/settings");
+                    }}
+                    className="w-full text-left px-4 py-2 text-sm text-gray-200 hover:bg-white/5"
+                  >
+                    Settings
+                  </button>
+                  <button
+                    onClick={() => {
+                      localStorage.removeItem("chitrakala_token");
+                      setProfileOpen(false);
+                      navigate("/login");
+                    }}
+                    className="w-full text-left px-4 py-2 text-sm text-rose-300 hover:bg-rose-500/10"
+                  >
+                    Logout
+                  </button>
+                </div>
+              )}
+            </div>
 
             {/* Mobile Menu */}
             <button

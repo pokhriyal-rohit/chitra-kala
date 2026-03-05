@@ -3,10 +3,12 @@ import { useNavigate } from "react-router";
 import { motion } from "motion/react";
 import { Upload, Image, Hash, X, ChevronLeft, Sparkles, CheckCircle } from "lucide-react";
 import { categories } from "../mockData";
+import { uploadDrawing } from "../api/drawings";
 
 export function UploadPage() {
   const navigate = useNavigate();
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const [file, setFile] = useState<File | null>(null);
   const [preview, setPreview] = useState<string | null>(null);
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
@@ -15,11 +17,14 @@ export function UploadPage() {
   const [hashtags, setHashtags] = useState<string[]>([]);
   const [submitted, setSubmitted] = useState(false);
   const [isDragging, setIsDragging] = useState(false);
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const handleFile = (file: File) => {
     const reader = new FileReader();
     reader.onload = (e) => setPreview(e.target?.result as string);
     reader.readAsDataURL(file);
+    setFile(file);
   };
 
   const handleDrop = (e: React.DragEvent) => {
@@ -39,10 +44,26 @@ export function UploadPage() {
 
   const removeHashtag = (tag: string) => setHashtags(hashtags.filter((h) => h !== tag));
 
-  const handleSubmit = () => {
-    if (!preview || !title || !selectedCategory) return;
-    setSubmitted(true);
-    setTimeout(() => navigate("/"), 2000);
+  const handleSubmit = async () => {
+    if (!file || !title || !selectedCategory) return;
+    setError("");
+    setLoading(true);
+    try {
+      const formData = new FormData();
+      formData.append("image", file);
+      formData.append("title", title);
+      formData.append("description", description);
+      formData.append("category", selectedCategory);
+      formData.append("hashtags", hashtags.join(","));
+
+      await uploadDrawing(formData);
+      setSubmitted(true);
+      setTimeout(() => navigate("/"), 2000);
+    } catch (err: any) {
+      setError(err?.response?.data?.message || "Upload failed. Please try again.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   if (submitted) {
@@ -206,14 +227,15 @@ export function UploadPage() {
           </div>
 
           {/* Submit */}
+          {error && <div className="text-rose-400 text-sm">{error}</div>}
           <button
             onClick={handleSubmit}
-            disabled={!preview || !title || !selectedCategory}
+            disabled={!preview || !title || !selectedCategory || loading}
             className="w-full flex items-center justify-center gap-2 py-4 rounded-2xl bg-gradient-to-r from-violet-600 to-pink-600 text-white hover:opacity-90 transition-opacity disabled:opacity-40 disabled:cursor-not-allowed shadow-lg shadow-violet-500/25"
             style={{ fontWeight: 600 }}
           >
             <Sparkles className="w-5 h-5" />
-            Publish Your Art
+            {loading ? "Publishing..." : "Publish Your Art"}
           </button>
         </div>
       </div>
