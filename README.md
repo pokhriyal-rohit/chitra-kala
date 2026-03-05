@@ -40,7 +40,6 @@ npm run dev            # http://localhost:5173
 ## Project Structure
 - `src/` — React app
 - `server/` — Express API
-- `nbhjb/` — reference UI snapshot (do not modify)
 
 ## Security / Publishing
 - Secrets kept out of git via `.gitignore` and `.env.example`
