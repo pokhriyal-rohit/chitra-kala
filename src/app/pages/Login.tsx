@@ -2,6 +2,10 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router";
 import { useAuth } from "../context/AuthContext";
 import { Sparkles, Loader2 } from "lucide-react";
+import {
+  loginWithGoogle,
+  loginWithFacebook,
+} from "../../../auth";
 
 export function Login() {
   const [email, setEmail] = useState("");
@@ -77,6 +81,36 @@ export function Login() {
             {loading ? <Loader2 className="w-5 h-5 animate-spin" /> : "Sign In"}
           </button>
         </form>
+
+        <div className="border-t border-white/10 mt-6 pt-6 space-y-3">
+          <button
+            onClick={async () => {
+              const user = await loginWithGoogle();
+              if (user) navigate("/");
+            }}
+            className="w-full bg-white/5 text-white rounded-xl py-3 font-semibold hover:bg-white/10 transition-colors"
+          >
+            Continue with Google
+          </button>
+          <button
+            onClick={async () => {
+              const user = await loginWithFacebook();
+              if (user) navigate("/");
+            }}
+            className="w-full bg-white/5 text-white rounded-xl py-3 font-semibold hover:bg-white/10 transition-colors"
+          >
+            Continue with Facebook
+          </button>
+          <button
+            onClick={async () => {
+              const user = await loginWithFacebook();
+              if (user) navigate("/");
+            }}
+            className="w-full bg-white/5 text-white rounded-xl py-3 font-semibold hover:bg-white/10 transition-colors"
+          >
+            Continue with Instagram
+          </button>
+        </div>
         <p className="text-gray-400 text-sm text-center mt-6">
           Don't have an account?{" "}
           <Link

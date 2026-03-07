@@ -8,11 +8,16 @@ import { Artists } from "./pages/Artists";
 import { Profile } from "./pages/Profile";
 import { DrawingDetail } from "./pages/DrawingDetail";
 import { UploadPage } from "./pages/Upload";
+import { Login } from "./pages/Login";
+import { Register } from "./pages/Register";
+import { Settings } from "./pages/Settings";
+import { ErrorFallback } from "./components/ErrorFallback";
 
 export const router = createBrowserRouter([
   {
     path: "/",
     Component: Root,
+    errorElement: <ErrorFallback />,
     children: [
       { index: true, Component: Home },
       { path: "explore", Component: Explore },
@@ -22,6 +27,9 @@ export const router = createBrowserRouter([
       { path: "profile/:id", Component: Profile },
       { path: "drawing/:id", Component: DrawingDetail },
       { path: "upload", Component: UploadPage },
+      { path: "login", Component: Login },
+      { path: "register", Component: Register },
+      { path: "settings", Component: Settings },
     ],
   },
 ]);
