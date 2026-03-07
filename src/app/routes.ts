@@ -1,4 +1,5 @@
 import { createBrowserRouter } from "react-router";
+import React from "react";
 import { Root } from "./components/Root";
 import { Home } from "./pages/Home";
 import { Explore } from "./pages/Explore";
@@ -17,7 +18,7 @@ export const router = createBrowserRouter([
   {
     path: "/",
     Component: Root,
-    errorElement: <ErrorFallback />,
+    errorElement: React.createElement(ErrorFallback),
     children: [
       { index: true, Component: Home },
       { path: "explore", Component: Explore },
